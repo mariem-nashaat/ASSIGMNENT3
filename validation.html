@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Registration Form</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f2f4f8; display: flex; justify-content: center; padding: 40px; }
+    form { background: #fff; padding: 24px; border-radius: 8px; width: 320px; }
+    label { display: block; margin-top: 12px; font-weight: bold; }
+    input { width: 100%; padding: 8px; margin-top: 4px; box-sizing: border-box; }
+    .error { color: #c62828; font-size: 13px; min-height: 16px; margin: 2px 0 0; }
+    button { margin-top: 16px; width: 100%; padding: 10px; background: #1565c0; color: #fff; border: none; cursor: pointer; }
+    #success { color: #c1085e; text-align: center; }
+  </style>
+</head>
+<body>
+  <form id="regForm" novalidate>
+    <h2>Register</h2>
+
+    <label for="name">Name</label>
+    <input type="text" id="name">
+    <p class="error" id="nameError"></p>
+
+    <label for="email">Email</label>
+    <input type="email" id="email">
+    <p class="error" id="emailError"></p>
+
+    <label for="password">Password</label>
+    <input type="password" id="password">
+    <p class="error" id="passwordError"></p>
+
+    <label for="confirm">Confirm password</label>
+    <input type="password" id="confirm">
+    <p class="error" id="confirmError"></p>
+
+    <label for="age">Age</label>
+    <input type="number" id="age">
+    <p class="error" id="ageError"></p>
+
+    <button type="submit">Submit</button>
+    <p id="success"></p>
+  </form>
+
+  <script>
+    const form = document.getElementById("regForm");
+
+    function setError(id, message) {
+      document.getElementById(id + "Error").textContent = message;
+      return message === "";
+    }
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault(); // always stop the default sending
+      let valid = true;
+      document.getElementById("success").textContent = "";
+
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const confirm = document.getElementById("confirm").value;
+      const age = document.getElementById("age").value;
+
+      // Name
+      if (!setError("name", name === "" ? "Name is required." : "")) valid = false;
+
+      // Email
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      let emailMsg = "";
+      if (email === "") emailMsg = "Email is required.";
+      else if (!emailPattern.test(email)) emailMsg = "Please enter a valid email.";
+      if (!setError("email", emailMsg)) valid = false;
+
+      // Password
+      let passMsg = "";
+      if (password === "") passMsg = "Password is required.";
+      else if (password.length < 8) passMsg = "Password must be at least 8 characters.";
+      if (!setError("password", passMsg)) valid = false;
+
+      // Confirm password
+      let confMsg = "";
+      if (confirm === "") confMsg = "Please confirm your password.";
+      else if (confirm !== password) confMsg = "Passwords do not match.";
+      if (!setError("confirm", confMsg)) valid = false;
+
+      // Age
+      let ageMsg = "";
+      if (age === "") ageMsg = "Age is required.";
+      else if (Number(age) < 1 || Number(age) > 120) ageMsg = "Age must be between 1 and 120.";
+      if (!setError("age", ageMsg)) valid = false;
+
+      if (valid) {
+        document.getElementById("success").textContent = "Registration successful!";
+      }
+    });
+  </script>
+</body>
+</html>
